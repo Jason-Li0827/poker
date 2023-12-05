@@ -41,14 +41,14 @@ public class Poker extends javax.swing.JFrame {
         player = new Player[2];
         for (int i = 0; i<2; i++){
             player[i] = new Player();
-            getContentPane().add(player[i], new org.netbeans.lib.awtextra.AbsoluteConstraints(20+i*400, 50, 150, 600));
+            getContentPane().add(player[i], new org.netbeans.lib.awtextra.AbsoluteConstraints(20+i*400, 50, 250, 600));
         }
         
         player[0].addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                if(!player[0].isEnabled()) {
                    playNr=1;
-                   //nextMove();
+                   nextMove();
                }                
             }
         });
@@ -57,11 +57,33 @@ public class Poker extends javax.swing.JFrame {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                if(!player[1].isEnabled()) {
                    playNr=0;
-                   //nextMove();
+                   nextMove();
                }                
             }
         });
     }
+    
+    public void nextMove(){
+        player[playNr].setVisible(true);
+        player[1-playNr].setVisible(false);
+        for (int i = 0; i < 5; i++){
+            dice[i].setSelected(false);
+        }
+        diceThrows=3;
+        jButton1.setEnabled(true);
+        player[0].setEnabled(true);
+        player[1].setEnabled(true);
+        
+        int[] points=new int[5];
+        
+        for(int i=0;i<dice.length;i++){
+            dice[i].throwDice();
+            points[i]=dice[i].getN();
+        }
+        diceThrows--;
+        player[playNr].setPoints(new Combinations(points).getPoints());
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -79,7 +101,7 @@ public class Poker extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 90, 220, 194));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 90, 220, 194));
 
         jButton1.setText("jButton1");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -87,33 +109,35 @@ public class Poker extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 330, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 330, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if(diceThrows==3){
-           player[playNr].setVisible(true);
-           player[1-playNr].setVisible(false);
-           for(int i=0;i<dice.length;i++){
-             dice[i].setSelected(false);  
-             dice[i].setEnabled(true);
-           }
+            player[playNr].setVisible(true);
+            player[1-playNr].setVisible(false);
+            for(int i=0;i<dice.length;i++){
+                dice[i].setSelected(false);  
+                dice[i].setEnabled(true);
+            }
         }
+    
         int[] points=new int[5];
+        
         for(int i=0;i<dice.length;i++){
             if(!dice[i].isSelected()){
                 dice[i].throwDice();
             }
             points[i]=dice[i].getN();
         }
+            
         player[playNr].setPoints(new Combinations(points).getPoints());
         diceThrows--;
         if(diceThrows==0){
             jButton1.setEnabled(false);
-            diceThrows=3;
-        }
+        }    
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
