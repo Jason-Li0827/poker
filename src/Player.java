@@ -11,7 +11,8 @@ import javax.swing.JButton;
  * @author cli
  */
 public class Player extends javax.swing.JPanel {
-    private int sum, sum6, moves;
+    private int sum6, moves;
+    private int sum = 0;
     private boolean bonus;
     private boolean[] isSelected;
     private int[] cPoints;
@@ -25,17 +26,22 @@ public class Player extends javax.swing.JPanel {
     }
     
     public void initButtons(){
+        sums = new javax.swing.JLabel();
+        sums.setText("0");
+        this.add(sums, new org.netbeans.lib.awtextra.AbsoluteConstraints(0,0, 100, 30));
         combinations = new javax.swing.JButton[13];
         for (int i = 0; i<13; i++){
             combinations[i] = new javax.swing.JButton();
             combinations[i].setText(name[i]);
-            this.add(combinations[i], new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50*i, 100, 50));
+            this.add(combinations[i], new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50*i, 150, 50));
             int index = i;
             combinations[i].addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     JButton combSelected =(JButton)evt.getSource();
                     combSelected.setEnabled(false);
                     check(index);
+                    sum += cPoints[index];
+                    sums.setText(Integer.toString(sum));
                 }
             });
         }
@@ -58,10 +64,9 @@ public class Player extends javax.swing.JPanel {
     
     public void check(int i){
         this.setEnabled(false);
-        
     }
     
-    public void reserGames(){
+    public void resetGames(){
         sum=0;
         sum6=0;
         moves=0;
@@ -74,9 +79,7 @@ public class Player extends javax.swing.JPanel {
         this.setEnabled(true);
     }
     
-    public void makeButtons(){
-        
-    }
+    
     
 
     
@@ -113,6 +116,7 @@ public class Player extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     
     private javax.swing.JButton combinations[];
+    private javax.swing.JLabel sums;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
