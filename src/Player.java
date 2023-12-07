@@ -11,8 +11,9 @@ import javax.swing.JButton;
  * @author cli
  */
 public class Player extends javax.swing.JPanel {
-    private int sum6, moves;
+    private int sum6 = 0;
     private int sum = 0;
+    private int moves = 0;
     private boolean bonus;
     private boolean[] isSelected;
     private int[] cPoints;
@@ -39,9 +40,23 @@ public class Player extends javax.swing.JPanel {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     JButton combSelected =(JButton)evt.getSource();
                     combSelected.setEnabled(false);
-                    check(index);
                     sum += cPoints[index];
+                    if (index < 6){
+                        if (cPoints[index]!=100){
+                            sum6 += cPoints[index];
+                            if (sum6 >= 63){
+                                sum += 35;
+                                System.out.println("bonus for group 1");
+                            }
+                        }
+                    } else if (index == 11 && cPoints[index] == 100) {
+                        bonus = true;
+                    }
+                    
+                    
                     sums.setText(Integer.toString(sum));
+                    check(index);
+                    moves++;
                 }
             });
         }
@@ -66,19 +81,36 @@ public class Player extends javax.swing.JPanel {
         this.setEnabled(false);
     }
     
-    public void resetGames(){
+    public void resetGame(){
         sum=0;
         sum6=0;
         moves=0;
         bonus=false;
         for (int i = 0; i<13; i++){
             combinations[i].setText(name[i]);
+            combinations[i].setEnabled(true);
             isSelected[i]=false;
             cPoints[i]=0;
         }
+        sums.setText(Integer.toString(sum));
         this.setEnabled(true);
     }
     
+    public int getMoves(){
+        return moves;
+    }
+    
+    public int getSum(){
+        return sum;
+    }
+    
+    public boolean getBonus(){
+        return bonus;
+    }
+    
+    public void setBonus(boolean bonus){
+        this.bonus=bonus;
+    }
     
     
 
