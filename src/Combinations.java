@@ -45,6 +45,7 @@ public class Combinations {
     
     public int combination6(){
         return count[5]*6;
+        //return 60;
     }
     
     public int combination7(){
