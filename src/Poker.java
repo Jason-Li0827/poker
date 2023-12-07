@@ -14,6 +14,9 @@ public class Poker extends javax.swing.JFrame {
      */
     int diceThrows;
     int playNr;
+    boolean restartTrue = false;
+    int numberOfRounds = 13;
+    int allBonus[] = {100,100,100,100,100,100,100,100,100,100,100,100,100};
         
     public Poker() {
         initComponents();
@@ -41,7 +44,7 @@ public class Poker extends javax.swing.JFrame {
         player = new Player[2];
         for (int i = 0; i<2; i++){
             player[i] = new Player();
-            getContentPane().add(player[i], new org.netbeans.lib.awtextra.AbsoluteConstraints(20+i*400, 50, 250, 600));
+            getContentPane().add(player[i], new org.netbeans.lib.awtextra.AbsoluteConstraints(20+i*400, 50, 250, 700));
         }
         
         player[0].addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -64,24 +67,44 @@ public class Poker extends javax.swing.JFrame {
     }
     
     public void nextMove(){
-        player[playNr].setVisible(true);
-        player[1-playNr].setVisible(false);
-        for (int i = 0; i < 5; i++){
-            dice[i].setSelected(false);
+        if (player[0].getMoves()+player[1].getMoves() >= 2*numberOfRounds-1){
+            int a = player[0].getSum();
+            int b = player[1].getSum();
+            if (a > b){
+                info.setText("player 1 won");
+            } else if (a < b){
+                info.setText("player 2 won");
+            } else{
+                info.setText("draw");
+            }
+            restartTrue = true;
+            throwDice.setText("restart");
+            player[1].setVisible(false);
+        } else {
+            player[playNr].setVisible(true);
+            player[1-playNr].setVisible(false);
+            for (int i = 0; i < 5; i++){
+                dice[i].setSelected(false);
+            }
+            diceThrows=3;
+            throwDice.setEnabled(true);
+            player[0].setEnabled(true);
+            player[1].setEnabled(true);
+
+            int[] points=new int[5];
+
+            for(int i=0;i<dice.length;i++){
+                dice[i].throwDice();
+                points[i]=dice[i].getN();
+            }
+            diceThrows--;
+            if (player[playNr].getBonus()){
+                player[playNr].setPoints(allBonus);
+                player[playNr].setBonus(false);
+            } else{
+                player[playNr].setPoints(new Combinations(points).getPoints());
+            }
         }
-        diceThrows=3;
-        jButton1.setEnabled(true);
-        player[0].setEnabled(true);
-        player[1].setEnabled(true);
-        
-        int[] points=new int[5];
-        
-        for(int i=0;i<dice.length;i++){
-            dice[i].throwDice();
-            points[i]=dice[i].getN();
-        }
-        diceThrows--;
-        player[playNr].setPoints(new Combinations(points).getPoints());
     }
     
     
@@ -95,7 +118,8 @@ public class Poker extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        throwDice = new javax.swing.JButton();
+        info = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -103,18 +127,30 @@ public class Poker extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 90, 220, 194));
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        throwDice.setText("throw");
+        throwDice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                throwDiceActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 330, -1, -1));
+        getContentPane().add(throwDice, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 320, -1, -1));
+
+        info.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        getContentPane().add(info, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, 140, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void throwDiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_throwDiceActionPerformed
+        if (restartTrue){
+            for (int i = 0; i<player.length;i++){
+                player[i].resetGame();
+            }
+            diceThrows=3;
+            playNr=0;
+            restartTrue=false;
+            throwDice.setText("throw");
+        }
         if(diceThrows==3){
             player[playNr].setVisible(true);
             player[1-playNr].setVisible(false);
@@ -133,12 +169,17 @@ public class Poker extends javax.swing.JFrame {
             points[i]=dice[i].getN();
         }
             
-        player[playNr].setPoints(new Combinations(points).getPoints());
         diceThrows--;
+        if (player[playNr].getBonus()){
+            player[playNr].setPoints(allBonus);
+            player[playNr].setBonus(false);
+        } else{
+            player[playNr].setPoints(new Combinations(points).getPoints());
+        }
         if(diceThrows==0){
-            jButton1.setEnabled(false);
+            throwDice.setEnabled(false);
         }    
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_throwDiceActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,7 +221,8 @@ public class Poker extends javax.swing.JFrame {
     private Dice[] dice;
     private Player[] player;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel info;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton throwDice;
     // End of variables declaration//GEN-END:variables
 }
