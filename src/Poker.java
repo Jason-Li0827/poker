@@ -98,12 +98,8 @@ public class Poker extends javax.swing.JFrame {
                 points[i]=dice[i].getN();
             }
             diceThrows--;
-            if (player[playNr].getBonus()){
-                player[playNr].setPoints(allBonus);
-                player[playNr].setBonus(false);
-            } else{
-                player[playNr].setPoints(new Combinations(points).getPoints());
-            }
+            player[playNr].setPoints(new Combinations(points).getPoints());
+            
         }
     }
     
@@ -170,12 +166,8 @@ public class Poker extends javax.swing.JFrame {
         }
             
         diceThrows--;
-        if (player[playNr].getBonus()){
-            player[playNr].setPoints(allBonus);
-            player[playNr].setBonus(false);
-        } else{
-            player[playNr].setPoints(new Combinations(points).getPoints());
-        }
+        player[playNr].setPoints(new Combinations(points).getPoints());
+        
         if(diceThrows==0){
             throwDice.setEnabled(false);
         }    
