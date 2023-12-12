@@ -41,6 +41,10 @@ public class Player extends javax.swing.JPanel {
                     JButton combSelected =(JButton)evt.getSource();
                     combSelected.setEnabled(false);
                     sum += cPoints[index];
+                    if (cPoints[11]==50 && bonus){
+                        sum+=100;
+                        System.out.println("bonus added");
+                    }
                     if (index < 6){
                         if (cPoints[index]!=100){
                             sum6 += cPoints[index];
@@ -49,8 +53,9 @@ public class Player extends javax.swing.JPanel {
                                 System.out.println("bonus for group 1");
                             }
                         }
-                    } else if (index == 11 && cPoints[index] == 100) {
+                    } else if (index == 11 && cPoints[index] == 50) {
                         bonus = true;
+                        System.out.println("bunos");
                     }
                     
                     
