@@ -15,7 +15,7 @@ import javax.swing.JToggleButton;
 public class Dice extends JToggleButton{
     private int n;
     public Dice(){
-        n = new Random().nextInt(2)+1;
+        n = new Random().nextInt(6)+1;
         this.setSize(40,40);
     }
     
@@ -61,7 +61,7 @@ public class Dice extends JToggleButton{
     }
     
     public void throwDice(){
-        n = new Random().nextInt(2)+1;
+        n = new Random().nextInt(6)+1;
         repaint();
     }
     
